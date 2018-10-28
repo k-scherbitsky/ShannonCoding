@@ -1,8 +1,12 @@
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SourceText {
 
@@ -15,11 +19,18 @@ public class SourceText {
         culcProbability(readFile());
     }
 
+    public void writeFile(String str) throws IOException {
+        FileWriter file = new FileWriter("alphabet.txt", true);
+        file.write(str);
+        file.close();
+
+    }
+
     private String readFile() throws IOException {
         RandomAccessFile file = new RandomAccessFile(path, "r");
         String res = "";
         int b = file.read();
-        while (b != -1){
+        while (b != -1) {
             res += (char) b;
             b = file.read();
         }
@@ -28,7 +39,6 @@ public class SourceText {
     }
 
     private void culcProbability(String text) {
-        String str = "Но если есть в кармане пачка сигарет...";
         int howChar = text.length(), count, i = 0;
         char[] simbol = text.toCharArray();
         Set<Character> setChar = new HashSet<>();
@@ -62,12 +72,17 @@ public class SourceText {
         }
         for (int k = 0; k < listChar.length; k++) {
 
-            characterArrayList.add(String.valueOf(listChar[k]));
-            int a = index[k];
-            int b = howChar;
-            double d = (double) a / b;
-            probabilityArrayList.add(Math.round(d * 10000d) / 10000d);
-//            System.out.println(listChar[k] + " - " + index[k] + "/" + howChar);
+            if (listChar[k] == '\n') {
+                characterArrayList.add(String.valueOf("(\\n)"));
+            } else if (listChar[k] == ' ') {
+                characterArrayList.add(String.valueOf("(space)"));
+            } else if (listChar[k] == '\r') {
+                characterArrayList.add(String.valueOf("(\\r)"));
+            } else {
+                characterArrayList.add(String.valueOf(listChar[k]));
+            }
+
+            probabilityArrayList.add((double) index[k] / howChar);
         }
     }
 

@@ -1,28 +1,29 @@
+package Shannon;
+
 import java.util.ArrayList;
 
-public class Shannon {
+public class Coding {
 
 
-    private ArrayList<Double> P;
-    private ArrayList<Double> Q = new ArrayList<Double>();
-    private ArrayList<Integer> L = new ArrayList<Integer>();
+    private ArrayList<Double> P; //массив вероятностей, упорядоченных по убыванию
+    private ArrayList<Double> Q = new ArrayList<Double>(); //массив для величин Qi
+    private ArrayList<Integer> L = new ArrayList<Integer>(); // массив длин кодовых слов
     private ArrayList<String> code = new ArrayList<>();
 
-    public Shannon(ArrayList<Double> P) {
+    public Coding(ArrayList<Double> P) {
         this.P = P;
         getTable();
     }
 
     private void getTable() {
         Q.add(0, 0.0);
-        for (int j = 0; j < P.size(); j++) {
-            L.add(j, (int) (-logB(P.get(j)) + 1));
+        for (double a : P) {
+            L.add((int) (-logB(a) + 1));
         }
 
         P.add(0, 0.0);
         for (int i = 1; i < P.size() - 1; i++) {
-            double d = Math.round((Q.get(i - 1) + P.get(i)) * 100d) / 100d;
-            Q.add(i, d);
+            Q.add(i, Q.get(i - 1) + P.get(i));
         }
         P.remove(0);
 
@@ -69,5 +70,15 @@ public class Shannon {
 
     public ArrayList<String> getCode() {
         return code;
+    }
+
+    public double getEntropy(ArrayList<Double> p){
+        double entropy = 0;
+
+        for (double pi : p) {
+            entropy += pi * logB(pi);
+        }
+
+        return -entropy;
     }
 }
