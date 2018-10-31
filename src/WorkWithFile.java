@@ -8,26 +8,23 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SourceText {
+public class WorkWithFile {
 
     private ArrayList<String> characterArrayList = new ArrayList<>();
     private ArrayList<Double> probabilityArrayList = new ArrayList<>();
-    private String path;
 
-    public SourceText(String path) throws IOException {
-        this.path = path;
-        culcProbability(readFile());
+    public WorkWithFile(String path) throws IOException {
+        culcProbability(readFile(path));
     }
 
-    public void writeFile(String str) throws IOException {
-        FileWriter file = new FileWriter("alphabet.txt", true);
+    public void writeFile(String fileName, String str) throws IOException {
+        FileWriter file = new FileWriter(fileName, true);
         file.write(str);
         file.close();
-
     }
 
-    private String readFile() throws IOException {
-        RandomAccessFile file = new RandomAccessFile(path, "r");
+    public String readFile(String fileName) throws IOException {
+        RandomAccessFile file = new RandomAccessFile(fileName, "r");
         String res = "";
         int b = file.read();
         while (b != -1) {
